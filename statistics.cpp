@@ -1,7 +1,10 @@
 #include <iostream>
 #include <limits>
 #include <vector>
-#include <math.h>
+#include <cmath>
+#include <string>
+#include <algorithm>    // std::sort
+
 
 class IStatistics {
 public:
@@ -37,7 +40,7 @@ private:
 
 class Max : public IStatistics {
 public:
-	Max() : m_max{std::numeric_limits<double>::min()} {
+	Max() : m_max{-std::numeric_limits<double>::min()} {
 	}
 
 	void update(double next) override {
@@ -113,15 +116,49 @@ private:
 	std::vector<double> m_vals;
 };
 
+class Pct : public IStatistics {
+public:
+	Pct(double x) : m_percent{x}, m_pct{0} {
+	}
+
+	void update(double next) {		// n = (P x N)/100 : P - процентиль, N - общее количество значений
+		m_vals.push_back(next);
+		double inter = (m_percent * m_vals.size()) / 100;
+		int n = static_cast<int>(floor(inter));
+		std::sort(m_vals.begin(), m_vals.end());
+		m_pct = m_vals.at(n);
+	}
+
+	double eval() const override {
+		return m_pct;
+	}
+
+	const char * name() const override {
+		if (m_percent == 90) {
+			return "pct90";
+		}
+		else {
+			return "pct95";
+		}
+	}
+
+private:
+	double m_pct;
+	std::vector<double> m_vals;
+	double m_percent;
+};
+
 int main() {
 
-	const size_t statistics_count = 4;
+	const size_t statistics_count = 6;
 	IStatistics *statistics[statistics_count];
 
 	statistics[0] = new Min{};
 	statistics[1] = new Max{};
 	statistics[2] = new Mean{};
 	statistics[3] = new Std{};
+	statistics[4] = new Pct{90};
+	statistics[5] = new Pct{95};
 
 	double val = 0;
 	while (std::cin >> val) {
