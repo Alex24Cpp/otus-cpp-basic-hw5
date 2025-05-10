@@ -24,6 +24,6 @@ double Pct::eval() const {
 const char* Pct::name() const {
 	std::ostringstream os;
 	os << "pct" << m_percent;
-	std::string str = os.str();
+	static std::string str = os.str();
 	return str.c_str();
 }

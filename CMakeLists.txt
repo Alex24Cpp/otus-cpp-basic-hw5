@@ -17,4 +17,8 @@ add_executable(statistics
                 src/statistics/Std.cpp src/statistics/Std.hpp
                 src/statistics/Pct.cpp src/statistics/Pct.hpp)
 set_target_properties(statistics PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+target_compile_options(statistics PRIVATE
+    -Wall -Wextra -pedantic -Werror
+)
+
 

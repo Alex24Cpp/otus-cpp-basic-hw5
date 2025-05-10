@@ -9,7 +9,7 @@ public:
 	double eval() const override;
 	const char* name() const override;
 private:
-	double m_pct;
-	std::vector<double> m_vals;
 	double m_percent;
+	std::vector<double> m_vals;
+	double m_pct;
 };
